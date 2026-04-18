@@ -769,6 +769,48 @@ namespace WebDav
         }
 
         /// <summary>
+        /// Executes a REPORT operation.
+        /// </summary>
+        /// <param name="requestUri">A string that represents the request URI.</param>
+        /// <param name="parameters">Parameters of the REPORT operation.</param>
+        /// <returns>An instance of <see cref="PropfindResponse" />.</returns>
+        public Task<PropfindResponse> Report(string requestUri, ReportParameters parameters)
+        {
+            return Report(CreateUri(requestUri), parameters);
+        }
+
+        /// <summary>
+        /// Executes a REPORT operation.
+        /// </summary>
+        /// <param name="requestUri">The <see cref="Uri"/> to request.</param>
+        /// <param name="parameters">Parameters of the REPORT operation.</param>
+        /// <returns>An instance of <see cref="PropfindResponse" />.</returns>
+        public async Task<PropfindResponse> Report(Uri requestUri, ReportParameters parameters)
+        {
+            Guard.NotNull(requestUri, "requestUri");
+
+            var headerBuilder = new HeaderBuilder();
+            if (parameters.ApplyTo.HasValue)
+                headerBuilder.Add(WebDavHeaders.Depth, DepthHeaderHelper.GetValueForReport(parameters.ApplyTo.Value));
+            var headers = headerBuilder
+                .AddWithOverwrite(parameters.Headers)
+                .Build();
+
+            var requestParams = new RequestParameters
+            {
+                Headers = headers,
+                Content = parameters.RequestBody != null
+                    ? new StringContent(parameters.RequestBody.ToStringWithDeclaration())
+                    : null,
+                ContentType = new MediaTypeHeaderValue("text/xml")
+            };
+
+            var response = await _dispatcher!.Send(requestUri, WebDavMethod.Report, requestParams, parameters.CancellationToken).ConfigureAwait(false);
+            var responseContent = await ReadContentAsString(response.Content).ConfigureAwait(false);
+            return _propfindResponseParser!.Parse(responseContent, (int)response.StatusCode, response.ReasonPhrase);
+        }
+
+        /// <summary>
         /// Sets the dispatcher of WebDAV requests.
         /// </summary>
         /// <param name="dispatcher">The dispatcher of WebDAV http requests.</param>

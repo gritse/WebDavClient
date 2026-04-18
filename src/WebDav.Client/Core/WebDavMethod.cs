@@ -19,5 +19,7 @@ namespace WebDav
         public static readonly HttpMethod Unlock = new HttpMethod("UNLOCK");
 
         public static readonly HttpMethod Search = new HttpMethod("SEARCH");
+
+        public static readonly HttpMethod Report = new HttpMethod("REPORT");
     }
 }

@@ -416,5 +416,21 @@ namespace WebDav
         /// <param name="parameters">Parameters of the SEARCH operation.</param>
         /// <returns>An instance of <see cref="PropfindResponse" />.</returns>
         Task<PropfindResponse> Search(Uri requestUri, SearchParameters parameters);
+
+        /// <summary>
+        /// Executes a REPORT operation.
+        /// </summary>
+        /// <param name="requestUri">A string that represents the request URI.</param>
+        /// <param name="parameters">Parameters of the REPORT operation.</param>
+        /// <returns>An instance of <see cref="PropfindResponse" />.</returns>
+        Task<PropfindResponse> Report(string requestUri, ReportParameters parameters);
+
+        /// <summary>
+        /// Executes a REPORT operation.
+        /// </summary>
+        /// <param name="requestUri">The <see cref="Uri"/> to request.</param>
+        /// <param name="parameters">Parameters of the REPORT operation.</param>
+        /// <returns>An instance of <see cref="PropfindResponse" />.</returns>
+        Task<PropfindResponse> Report(Uri requestUri, ReportParameters parameters);
     }
 }

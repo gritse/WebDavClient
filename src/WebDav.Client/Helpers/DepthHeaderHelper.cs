@@ -44,5 +44,20 @@ namespace WebDav
                     throw new ArgumentOutOfRangeException(nameof(applyTo));
             }
         }
+
+        public static string GetValueForReport(ApplyTo.Report applyTo)
+        {
+            switch (applyTo)
+            {
+                case ApplyTo.Report.ResourceOnly:
+                    return "0";
+                case ApplyTo.Report.ResourceAndChildren:
+                    return "1";
+                case ApplyTo.Report.ResourceAndAncestors:
+                    return "infinity";
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(applyTo));
+            }
+        }
     }
 }
